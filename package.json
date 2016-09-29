@@ -1,0 +1,64 @@
+{
+  "directories": {
+    "test": "test"
+  },
+  "author": "azu",
+  "license": "MIT",
+  "files": [
+    "bin/",
+    "lib/",
+    "src/"
+  ],
+  "name": "react-routing-resolver",
+  "version": "1.0.0",
+  "description": "React Router component, but not mount component. It's resolver.",
+  "main": "lib/react-routing-resolver.js",
+  "scripts": {
+    "test": "jest",
+    "prepublish": "npm run --if-present build",
+    "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
+    "watch": "babel src --out-dir lib --watch --source-maps"
+  },
+  "keywords": [
+    "react",
+    "router",
+    "route",
+    "routing",
+    "url",
+    "component",
+    "resolve"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/azu/react-routing-resolver.git"
+  },
+  "bugs": {
+    "url": "https://github.com/azu/react-routing-resolver/issues"
+  },
+  "homepage": "https://github.com/azu/react-routing-resolver",
+  "devDependencies": {
+    "autoprefixer": "^6.5.0",
+    "babel-cli": "^6.16.0",
+    "babel-jest": "^15.0.0",
+    "babel-loader": "^6.2.5",
+    "babel-plugin-transform-class-properties": "^6.16.0",
+    "babel-polyfill": "^6.16.0",
+    "babel-preset-es2015": "^6.16.0",
+    "babel-preset-jsdoc-to-assert": "^4.0.0",
+    "babel-preset-power-assert": "^1.0.0",
+    "babel-preset-react": "^6.16.0",
+    "babel-register": "^6.16.0",
+    "chokidar-cli": "^1.2.0",
+    "jest": "^15.1.1",
+    "power-assert": "^1.4.1",
+    "react-test-renderer": "^15.3.2"
+  },
+  "dependencies": {
+    "enroute": "^1.0.1",
+    "history": "^4.2.0"
+  },
+  "peerDependencies": {
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  }
+}
