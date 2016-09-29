@@ -10,7 +10,7 @@
     "src/"
   ],
   "name": "react-routing-resolver",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Routing component, but It does't mount component. It's just resolver.",
   "main": "lib/index.js",
   "scripts": {
