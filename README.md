@@ -1,4 +1,4 @@
-# react-routing-resolver
+# react-routing-resolver [![Build Status](https://travis-ci.org/azu/react-routing-resolver.svg?branch=master)](https://travis-ci.org/azu/react-routing-resolver)
 
 React Routing component, but It does't mount component. 
 It just resolve routing.
