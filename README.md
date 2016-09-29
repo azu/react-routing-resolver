@@ -1,6 +1,7 @@
 # react-routing-resolver
 
-React Router component, but does't mount component. It is just resolver.
+React Routing component, but It does't mount component. 
+It just resolve routing.
 
 ## Install
 
