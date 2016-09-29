@@ -37,8 +37,8 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
 
 ```jsx
 <Router path="/path/to/name" onHistoryChange={onHistoryChange}>
-    <Route path="/view/:id" onMatch={onViewChange}/>
-    <Route path="*" onMatch={onMatchOther}/>
+    <Route pattern="/view/:id" onMatch={onViewChange}/>
+    <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
 ```
 
@@ -53,7 +53,7 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
 ```jsx
 <Router>
     {/* `<Route>` should be in `<Router />` */}
-    <Route path="/view/:id" onMatch={onViewChange}/>
+    <Route pattern="/view/:id" onMatch={onViewChange}/>
 </Router>
 ```
 
@@ -70,8 +70,8 @@ const onMatchOther = () => {
 };
 
 <Router path={router.path}>
-    <Route path="/view/:id" onMatch={onViewChange}/>
-    <Route path="*" onMatch={onMatchOther}/>
+    <Route pattern="/view/:id" onMatch={onViewChange}/>
+    <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
 ```
 
