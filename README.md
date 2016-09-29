@@ -81,6 +81,8 @@ See [`__test__`](./src/__test__) for more details.
 
 - [tj/react-enroute: React router with a small footprint for modern browsers](https://github.com/tj/react-enroute)
 - [lapwinglabs/enroute: tiny functional router](https://github.com/lapwinglabs/enroute)
+- [You might not need React Router](https://medium.freecodecamp.com/you-might-not-need-react-router-38673620f3d)
+    - It is similar approach.
 
 ## Changelog
 

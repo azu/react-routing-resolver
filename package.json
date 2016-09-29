@@ -11,7 +11,7 @@
   ],
   "name": "react-routing-resolver",
   "version": "1.0.0",
-  "description": "React Router component, but not mount component. It's resolver.",
+  "description": "Routing component, but It does't mount component. It's just resolver.",
   "main": "lib/react-routing-resolver.js",
   "scripts": {
     "test": "jest",
