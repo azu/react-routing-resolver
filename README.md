@@ -42,7 +42,7 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
 </Router>;
 ```
 
-## `<Route>`
+## `<Route>` props
 
 - `pattern`: path pattern string
   - pattern is used of [Path-to-RegExp](https://github.com/pillarjs/path-to-regexp "Path-to-RegExp")
