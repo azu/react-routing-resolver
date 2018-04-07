@@ -61,6 +61,8 @@
     ]
   },
   "dependencies": {
+    "@types/react": "^16.3.5",
+    "@types/react-dom": "^16.0.4",
     "enroute": "^1.0.1",
     "history": "^4.2.0",
     "prop-types": "^15.6.1"
