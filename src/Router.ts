@@ -1,7 +1,6 @@
 "use strict";
 import * as React from "react";
 import { ReactElement } from "react";
-import * as assert from "assert";
 import { History } from "history";
 import createHistory from "history/createBrowserHistory";
 import { cleanPath, normalizeRoute } from "./path-util";
@@ -48,7 +47,9 @@ export class Router extends React.Component<RouterProps> {
         // when the history is change, run routing
         this.unlisten = this.history.listen(location => {
             if (process.env.NODE_ENV === "development") {
-                assert(typeof this.router === "function", "this.router should be initialized");
+                if (typeof this.router !== "function") {
+                    throw new Error("this.router should be initialized");
+                }
             }
             if (typeof this.props.onHistoryChange === "function") {
                 this.props.onHistoryChange(location);
