@@ -1,12 +1,13 @@
 // LICENSE : MIT
 "use strict";
+
 /**
  * Normalize route based on the parent.
  * @param {string} path
  * @param {Object} [parent]
  * @returns {string}
  */
-export function normalizeRoute(path, parent) {
+export function normalizeRoute(path: string, parent?: { route: string }) {
     // "/" signifies an absolute route
     if (path[0] === '/') {
         return path;
@@ -25,6 +26,6 @@ export function normalizeRoute(path, parent) {
  * @param {string} path
  * @returns {string}
  */
-export function cleanPath(path) {
+export function cleanPath(path: string) {
     return path.replace(/\/\//g, '/');
 }
