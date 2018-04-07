@@ -1,5 +1,6 @@
 'use strict';
 import React from 'react';
+import PropTypes from "prop-types"
 import assert from 'assert';
 import createHistory from 'history/createBrowserHistory';
 import enroute from 'enroute';
@@ -11,14 +12,14 @@ import {cleanPath, normalizeRoute} from './path-util';
 export default class Router extends React.Component {
     static propTypes = {
         // Current Routing path
-        path: React.PropTypes.string.isRequired,
+        path: PropTypes.string.isRequired,
         // call the handler when the history is changed.
         // Timing: browser back, pushState, browser forward
-        onHistoryChange: React.PropTypes.func,
+        onHistoryChange: PropTypes.func,
         // children is a collection of <Route>
-        children: React.PropTypes.oneOfType([
+        children: PropTypes.oneOfType([
             routeType,
-            React.PropTypes.arrayOf(routeType)
+            PropTypes.arrayOf(routeType)
         ]).isRequired
     };
 

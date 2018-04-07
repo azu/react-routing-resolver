@@ -1,8 +1,9 @@
 'use strict';
 import React from 'react';
-export const routeType = React.PropTypes.oneOfType([
-    React.PropTypes.object,
-    React.PropTypes.element
+import PropTypes from "prop-types"
+export const routeType = PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.element
 ]);
 /**
  * <Route /> only work under the <Router/>
@@ -10,8 +11,8 @@ export const routeType = React.PropTypes.oneOfType([
  */
 export default class Route extends React.Component {
     static propTypes = {
-        pattern: React.PropTypes.string.isRequired,
-        onMatch: React.PropTypes.func.isRequired
+        pattern: PropTypes.string.isRequired,
+        onMatch: PropTypes.func.isRequired
     };
 
     render() {
