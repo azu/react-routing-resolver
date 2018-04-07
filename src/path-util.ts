@@ -1,21 +1,24 @@
 // LICENSE : MIT
 "use strict";
+import { ReactElement } from "react";
+import { RouteProps } from "./Route";
+
 /**
  * Normalize route based on the parent.
  * @param {string} path
  * @param {Object} [parent]
  * @returns {string}
  */
-export function normalizeRoute(path, parent) {
+export function normalizeRoute(path: string, parent?: ReactElement<RouteProps>) {
     // "/" signifies an absolute route
-    if (path[0] === '/') {
+    if (path[0] === "/") {
         return path;
     }
     if (parent === null || parent === undefined) {
         return path;
     }
     // no need for a join
-    return `${parent.route}/${path}`; // join
+    return `${parent.props.path}/${path}`; // join
 }
 
 /**
@@ -25,6 +28,6 @@ export function normalizeRoute(path, parent) {
  * @param {string} path
  * @returns {string}
  */
-export function cleanPath(path) {
-    return path.replace(/\/\//g, '/');
+export function cleanPath(path: string) {
+    return path.replace(/\/\//g, "/");
 }
