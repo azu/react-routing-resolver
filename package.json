@@ -1,70 +1,85 @@
 {
-  "directories": {
-    "test": "test"
+  "name": "react-routing-resolver",
+  "version": "1.0.2",
+  "description": "Routing component, but It does't mount component. It's just resolver.",
+  "keywords": [
+    "component",
+    "react",
+    "resolve",
+    "route",
+    "router",
+    "routing",
+    "url"
+  ],
+  "homepage": "https://github.com/azu/react-routing-resolver",
+  "bugs": {
+    "url": "https://github.com/azu/react-routing-resolver/issues"
   },
-  "author": "azu",
   "license": "MIT",
+  "author": "azu",
   "files": [
     "bin/",
     "lib/",
     "src/"
   ],
-  "name": "react-routing-resolver",
-  "version": "1.0.2",
-  "description": "Routing component, but It does't mount component. It's just resolver.",
   "main": "lib/index.js",
-  "scripts": {
-    "test": "jest",
-    "prepublish": "npm run --if-present build",
-    "build": "NODE_ENV=production babel src --out-dir lib --source-maps",
-    "watch": "babel src --out-dir lib --watch --source-maps"
+  "types": "lib/react-routing-resolver.d.ts",
+  "directories": {
+    "test": "test"
   },
-  "keywords": [
-    "react",
-    "router",
-    "route",
-    "routing",
-    "url",
-    "component",
-    "resolve"
-  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/azu/react-routing-resolver.git"
   },
-  "bugs": {
-    "url": "https://github.com/azu/react-routing-resolver/issues"
+  "scripts": {
+    "build": "cross-env NODE_ENV=production tsc -p .",
+    "prepublish": "npm run --if-present build",
+    "test": "jest",
+    "watch": "tsc -p . --watch"
   },
-  "homepage": "https://github.com/azu/react-routing-resolver",
-  "devDependencies": {
-    "babel-cli": "^6.16.0",
-    "babel-jest": "^22.4.3",
-    "babel-plugin-transform-class-properties": "^6.16.0",
-    "babel-polyfill": "^6.16.0",
-    "babel-preset-es2015": "^6.16.0",
-    "babel-preset-jsdoc-to-assert": "^4.0.0",
-    "babel-preset-power-assert": "^2.0.0",
-    "babel-preset-react": "^6.16.0",
-    "babel-register": "^6.16.0",
-    "jest": "^22.4.3",
-    "power-assert": "^1.4.1",
-    "react": "^16.3.1",
-    "react-dom": "^16.3.1",
-    "react-test-renderer": "^16.3.1"
+  "jest": {
+    "globals": {
+      "ts-jest": {
+        "tsConfigFile": "tsconfig.test.json"
+      }
+    },
+    "transform": {
+      "^.+\\.(ts|js)x?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "lib/"
+    ]
   },
   "dependencies": {
     "enroute": "^1.0.1",
     "history": "^4.2.0",
     "prop-types": "^15.6.1"
   },
+  "devDependencies": {
+    "@types/jest": "^22.2.2",
+    "@types/node": "^9.6.2",
+    "cross-env": "^5.1.4",
+    "jest": "^22.4.3",
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1",
+    "react-test-renderer": "^16.3.1",
+    "ts-jest": "^22.4.2",
+    "ts-node": "^5.0.1",
+    "ts-node-test-register": "^2.0.0",
+    "typescript": "^2.8.1"
+  },
   "peerDependencies": {
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
-  },
-  "jest": {
-    "testPathIgnorePatterns": [
-      "/node_modules/",
-      "lib/"
-    ]
   }
 }

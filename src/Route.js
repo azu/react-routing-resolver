@@ -1,6 +1,6 @@
 'use strict';
-import React from 'react';
-import PropTypes from "prop-types"
+import * as React from 'react';
+import * as  PropTypes from "prop-types"
 export const routeType = PropTypes.oneOfType([
     PropTypes.object,
     PropTypes.element

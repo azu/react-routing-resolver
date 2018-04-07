@@ -1,9 +1,9 @@
 // LICENSE : MIT
 "use strict";
-import assert from 'assert'
-import React from 'react'
-import Router from '../Router'
+import * as assert from 'assert'
+import * as React from 'react'
 import Route from '../Route'
+import Router from '../Router'
 import {render} from 'react-dom'
 
 describe('Router', () => {

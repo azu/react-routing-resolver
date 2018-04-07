@@ -1,11 +1,12 @@
 'use strict';
-import React from 'react';
-import PropTypes from "prop-types"
-import assert from 'assert';
+import * as React from 'react';
+import * as  PropTypes from "prop-types"
+import * as assert from 'assert';
 import createHistory from 'history/createBrowserHistory';
-import enroute from 'enroute';
-import {routeType} from './Route';
-import {cleanPath, normalizeRoute} from './path-util';
+import { routeType } from './Route';
+import { cleanPath, normalizeRoute } from './path-util';
+
+const enroute = require('enroute');
 /**
  * Router is parent component
  */
@@ -108,10 +109,10 @@ export default class Router extends React.Component {
      * @private
      */
     _addRoute(routeElement, parent) {
-        const {pattern, onMatch, children} = routeElement.props;
+        const { pattern, onMatch, children } = routeElement.props;
         const route = normalizeRoute(pattern, parent);
         if (children) {
-            this._addRoutes(children, {route});
+            this._addRoutes(children, { route });
         }
         this.routes[cleanPath(route)] = onMatch;
     }
