@@ -1,13 +1,13 @@
-'use strict';
-import * as React from 'react';
-import { ReactElement } from 'react';
-import * as assert from 'assert';
+"use strict";
+import * as React from "react";
+import { ReactElement } from "react";
+import * as assert from "assert";
 import { History } from "history";
-import createHistory from 'history/createBrowserHistory';
-import { cleanPath, normalizeRoute } from './path-util';
+import createHistory from "history/createBrowserHistory";
+import { cleanPath, normalizeRoute } from "./path-util";
 import { RouteProps } from "./Route";
 
-const enroute = require('enroute');
+const enroute = require("enroute");
 
 export interface RouterProps {
     currentPath: string;
@@ -42,7 +42,6 @@ export class Router extends React.Component<RouterProps> {
         this.router = enroute(this.routes);
     }
 
-
     componentWillReceiveProps(nextProps: RouterProps) {
         // When `path` is changed, change history
         this._updateRoutingPath(nextProps.currentPath);
@@ -52,11 +51,11 @@ export class Router extends React.Component<RouterProps> {
         // At first time, run routing
         this.router(this.props.currentPath);
         // when the history is change, run routing
-        this.unlisten = this.history.listen((location) => {
+        this.unlisten = this.history.listen(location => {
             if (process.env.NODE_ENV === "development") {
-                assert(typeof this.router === 'function', 'this.router should be initialized');
+                assert(typeof this.router === "function", "this.router should be initialized");
             }
-            if (typeof this.props.onHistoryChange === 'function') {
+            if (typeof this.props.onHistoryChange === "function") {
                 this.props.onHistoryChange(location);
             }
             this.router(location.pathname);
@@ -73,7 +72,6 @@ export class Router extends React.Component<RouterProps> {
     render() {
         return null;
     }
-
 
     /**
      * `path` が変更された時のみ history を変更する
@@ -105,7 +103,7 @@ export class Router extends React.Component<RouterProps> {
         if (!routes) {
             return;
         }
-        React.Children.forEach(routes, (route) => this._addRoute(route as ReactElement<RouteProps>, parent));
+        React.Children.forEach(routes, route => this._addRoute(route as ReactElement<RouteProps>, parent));
     }
 
     /**

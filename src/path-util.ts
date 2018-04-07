@@ -11,7 +11,7 @@ import { RouteProps } from "./Route";
  */
 export function normalizeRoute(path: string, parent?: ReactElement<RouteProps>) {
     // "/" signifies an absolute route
-    if (path[0] === '/') {
+    if (path[0] === "/") {
         return path;
     }
     if (parent === null || parent === undefined) {
@@ -29,5 +29,5 @@ export function normalizeRoute(path: string, parent?: ReactElement<RouteProps>) 
  * @returns {string}
  */
 export function cleanPath(path: string) {
-    return path.replace(/\/\//g, '/');
+    return path.replace(/\/\//g, "/");
 }

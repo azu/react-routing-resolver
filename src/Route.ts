@@ -1,5 +1,5 @@
-'use strict';
-import * as React from 'react';
+"use strict";
+import * as React from "react";
 import { ReactElement } from "react";
 
 export interface RouteProps {
@@ -7,7 +7,7 @@ export interface RouteProps {
     path?: string;
     pattern: string;
     onMatch: (...args: any[]) => void;
-    children?: ReactElement<RouteProps> | ReactElement<RouteProps>[]
+    children?: ReactElement<RouteProps> | ReactElement<RouteProps>[];
 }
 
 /**

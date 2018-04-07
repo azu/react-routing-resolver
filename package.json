@@ -23,10 +23,7 @@
     "src/"
   ],
   "main": "lib/index.js",
-  "types": "lib/react-routing-resolver.d.ts",
-  "directories": {
-    "test": "test"
-  },
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "https://github.com/azu/react-routing-resolver.git"
@@ -35,7 +32,10 @@
     "build": "cross-env NODE_ENV=production tsc -p .",
     "prepublish": "npm run --if-present build",
     "test": "jest",
-    "watch": "tsc -p . --watch"
+    "watch": "tsc -p . --watch",
+    "prettier": "prettier --write \"**/*.{js,jsx,ts,tsx,css}\"",
+    "precommit": "lint-staged",
+    "postcommit": "git reset"
   },
   "jest": {
     "globals": {
@@ -72,7 +72,10 @@
     "@types/jest": "^22.2.2",
     "@types/node": "^9.6.2",
     "cross-env": "^5.1.4",
+    "husky": "^0.14.3",
     "jest": "^22.4.3",
+    "lint-staged": "^7.0.4",
+    "prettier": "^1.11.1",
     "react": "^16.3.1",
     "react-dom": "^16.3.1",
     "react-test-renderer": "^16.3.1",
@@ -84,5 +87,16 @@
   "peerDependencies": {
     "react": "^15.3.2",
     "react-dom": "^15.3.2"
+  },
+  "prettier": {
+    "singleQuote": false,
+    "printWidth": 120,
+    "tabWidth": 4
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,css}": [
+      "prettier --write",
+      "git add"
+    ]
   }
 }
