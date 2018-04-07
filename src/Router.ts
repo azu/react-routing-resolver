@@ -74,7 +74,7 @@ export class Router extends React.Component<RouterProps> {
     }
 
     /**
-     * `path` が変更された時のみ history を変更する
+     * Push history state when actually change`path`
      * @param {string|undefined} path
      * @private
      */
