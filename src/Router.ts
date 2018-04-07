@@ -1,53 +1,51 @@
 'use strict';
 import * as React from 'react';
-import * as  PropTypes from "prop-types"
+import { ReactElement } from 'react';
 import * as assert from 'assert';
+import { History } from "history";
 import createHistory from 'history/createBrowserHistory';
-import { routeType } from './Route';
 import { cleanPath, normalizeRoute } from './path-util';
+import { RouteProps } from "./Route";
 
 const enroute = require('enroute');
+
+export interface RouterProps {
+    path: string;
+    onHistoryChange?: (arg: any) => void;
+    children: ReactElement<RouteProps> | ReactElement<RouteProps>[];
+}
+
 /**
  * Router is parent component
  */
-export default class Router extends React.Component {
-    static propTypes = {
-        // Current Routing path
-        path: PropTypes.string.isRequired,
-        // call the handler when the history is changed.
-        // Timing: browser back, pushState, browser forward
-        onHistoryChange: PropTypes.func,
-        // children is a collection of <Route>
-        children: PropTypes.oneOfType([
-            routeType,
-            PropTypes.arrayOf(routeType)
-        ]).isRequired
+export class Router extends React.Component<RouterProps> {
+    private routes: {
+        [index: string]: (...args: any[]) => void;
     };
+    private router: any;
+    private history: History;
+    private unlisten?: () => void;
 
-    constructor() {
-        super();
+    constructor(args: RouterProps) {
+        super(args);
         this.history = createHistory();
         /**
          * Routing mapping object for enroute
          * @type {Object.<string, function>}
          */
         this.routes = {};
-        this.router = null;
-    }
-
-
-    componentWillReceiveProps(nextProps) {
-        // When `path` is changed, change history
-        this._updateRoutingPath(nextProps.path);
-    }
-
-    componentWillMount() {
         // `<Route pattern="" onMatch=fn>`
         // create `this.routes` object
         this._addRoutes(this.props.children);
         // run routing
         // https://github.com/lapwinglabs/enroute
         this.router = enroute(this.routes);
+    }
+
+
+    componentWillReceiveProps(nextProps: RouterProps) {
+        // When `path` is changed, change history
+        this._updateRoutingPath(nextProps.path);
     }
 
     componentDidMount() {
@@ -66,7 +64,9 @@ export default class Router extends React.Component {
     }
 
     componentWillUnmount() {
-        this.unlisten();
+        if (this.unlisten) {
+            this.unlisten();
+        }
     }
 
     // nope
@@ -80,13 +80,16 @@ export default class Router extends React.Component {
      * @param {string|undefined} path
      * @private
      */
-    _updateRoutingPath(path) {
-        const hasNextPath = path !== undefined && path.length > 0;
-        if (!hasNextPath) {
+    _updateRoutingPath(path?: string) {
+        if (!path) {
+            return;
+        }
+        if (path.length === 0) {
             return;
         }
         // same path is ignored
-        if (this.history.pathname === path) {
+        const location = this.history.location;
+        if (location.pathname === path) {
             return;
         }
         this.history.push(path);
@@ -98,8 +101,11 @@ export default class Router extends React.Component {
      * @param {Object} [parent]
      * @private
      */
-    _addRoutes(routes, parent) {
-        React.Children.forEach(routes, (route) => this._addRoute(route, parent));
+    _addRoutes(routes?: ReactElement<RouteProps> | ReactElement<RouteProps>[], parent?: any) {
+        if (!routes) {
+            return;
+        }
+        React.Children.forEach(routes, (route) => this._addRoute(route as ReactElement<RouteProps>, parent));
     }
 
     /**
@@ -108,12 +114,17 @@ export default class Router extends React.Component {
      * @param {Object} [parent]
      * @private
      */
-    _addRoute(routeElement, parent) {
+    _addRoute(routeElement: ReactElement<RouteProps>, parent?: ReactElement<RouteProps>) {
         const { pattern, onMatch, children } = routeElement.props;
         const route = normalizeRoute(pattern, parent);
         if (children) {
             this._addRoutes(children, { route });
         }
-        this.routes[cleanPath(route)] = onMatch;
+        // https://github.com/lapwinglabs/enroute
+        const routingHandler = (args: any, _sharedProps: any) => {
+            onMatch(args);
+        };
+        (routingHandler as any).displayName = pattern;
+        this.routes[cleanPath(route)] = routingHandler;
     }
 }
