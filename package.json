@@ -85,8 +85,8 @@
     "typescript": "^2.8.1"
   },
   "peerDependencies": {
-    "react": "^15.3.2",
-    "react-dom": "^15.3.2"
+    "react": "^16.3.1",
+    "react-dom": "^16.3.1"
   },
   "prettier": {
     "singleQuote": false,
