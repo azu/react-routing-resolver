@@ -36,15 +36,10 @@ export class Router extends React.Component<RouterProps> {
         this.routes = {};
         // `<Route pattern="" onMatch=fn>`
         // create `this.routes` object
-        this._addRoutes(this.props.children);
+        this.addRoutes(this.props.children);
         // run routing
         // https://github.com/lapwinglabs/enroute
         this.router = enroute(this.routes);
-    }
-
-    componentWillReceiveProps(nextProps: RouterProps) {
-        // When `path` is changed, change history
-        this._updateRoutingPath(nextProps.currentPath);
     }
 
     componentDidMount() {
@@ -60,6 +55,10 @@ export class Router extends React.Component<RouterProps> {
             }
             this.router(location.pathname);
         });
+    }
+
+    componentDidUpdate() {
+        this.updateRoutingPath(this.props.currentPath);
     }
 
     componentWillUnmount() {
@@ -78,7 +77,7 @@ export class Router extends React.Component<RouterProps> {
      * @param {string|undefined} path
      * @private
      */
-    _updateRoutingPath(path?: string) {
+    private updateRoutingPath(path?: string) {
         if (!path) {
             return;
         }
@@ -99,11 +98,11 @@ export class Router extends React.Component<RouterProps> {
      * @param {Object} [parent]
      * @private
      */
-    _addRoutes(routes?: ReactElement<RouteProps> | ReactElement<RouteProps>[], parent?: any) {
+    private addRoutes(routes?: ReactElement<RouteProps> | ReactElement<RouteProps>[], parent?: any) {
         if (!routes) {
             return;
         }
-        React.Children.forEach(routes, route => this._addRoute(route as ReactElement<RouteProps>, parent));
+        React.Children.forEach(routes, route => this.addRoute(route as ReactElement<RouteProps>, parent));
     }
 
     /**
@@ -112,11 +111,11 @@ export class Router extends React.Component<RouterProps> {
      * @param {Object} [parent]
      * @private
      */
-    _addRoute(routeElement: ReactElement<RouteProps>, parent?: ReactElement<RouteProps>) {
+    private addRoute(routeElement: ReactElement<RouteProps>, parent?: ReactElement<RouteProps>) {
         const { pattern, onMatch, children } = routeElement.props;
         const route = normalizeRoute(pattern, parent);
         if (children) {
-            this._addRoutes(children, { route });
+            this.addRoutes(children, { route });
         }
         // https://github.com/lapwinglabs/enroute
         const routingHandler = (args: any, _sharedProps: any) => {
