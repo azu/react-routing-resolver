@@ -1,7 +1,13 @@
 # react-routing-resolver [![Build Status](https://travis-ci.org/azu/react-routing-resolver.svg?branch=master)](https://travis-ci.org/azu/react-routing-resolver)
 
-React Routing component, but It does't mount component. 
-It just resolve routing.
+React Routing component, but it does't mount component. 
+Instead of, It just resolve routing.
+
+## Features
+
+- Tiny Routing library
+- Not mount, but resolve path
+- Support TypeScript
 
 ## Install
 
@@ -29,14 +35,14 @@ use `<Router>` and `<Route>` for declarative routing.
 
 ### `<Router>` props
 
-- `path`: current path(path is same format with `location.pathname`
+- `currentPath`: current path(path is same format with `location.pathname`
 - `onHistoryChange`: call the handler when the history is changed.
 
 When the `path` is change, this library change the browser `history` by `history.pushState`.
 And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the `onMatch` handler.
 
 ```jsx
-<Router path="/path/to/name" onHistoryChange={onHistoryChange}>
+<Router currentPath="/path/to/name" onHistoryChange={onHistoryChange}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
@@ -69,7 +75,7 @@ const onViewChange = ({ id }) => {
 const onMatchOther = () => {
 };
 
-<Router path={router.path}>
+<Router currentPath={router.path}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;

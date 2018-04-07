@@ -10,7 +10,7 @@ import { RouteProps } from "./Route";
 const enroute = require('enroute');
 
 export interface RouterProps {
-    path: string;
+    currentPath: string;
     onHistoryChange?: (arg: any) => void;
     children: ReactElement<RouteProps> | ReactElement<RouteProps>[];
 }
@@ -45,12 +45,12 @@ export class Router extends React.Component<RouterProps> {
 
     componentWillReceiveProps(nextProps: RouterProps) {
         // When `path` is changed, change history
-        this._updateRoutingPath(nextProps.path);
+        this._updateRoutingPath(nextProps.currentPath);
     }
 
     componentDidMount() {
         // At first time, run routing
-        this.router(this.props.path);
+        this.router(this.props.currentPath);
         // when the history is change, run routing
         this.unlisten = this.history.listen((location) => {
             if (process.env.NODE_ENV === "development") {

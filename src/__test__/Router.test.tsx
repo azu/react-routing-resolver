@@ -10,7 +10,7 @@ describe('Router', () => {
             const div = document.createElement('div');
             const onMath = jest.fn();
             render((
-                <Router path="/">
+                <Router currentPath="/">
                     <Route pattern="/" onMatch={onMath}/>
                 </Router>
             ), div, () => {
@@ -21,7 +21,7 @@ describe('Router', () => {
             const div = document.createElement('div');
             const onMath = jest.fn();
             render((
-                <Router path="/42/add">
+                <Router currentPath="/42/add">
                     <Route pattern="/:id/:action" onMatch={onMath}/>
                 </Router>
             ), div, () => {
@@ -36,7 +36,7 @@ describe('Router', () => {
             const onMatchA = jest.fn();
             const onMatchB = jest.fn();
             render((
-                <Router path="/path/both/A">
+                <Router currentPath="/path/both/A">
                     <Route pattern="/path/both/A" onMatch={onMatchA}/>
                     <Route pattern="/path/both/B" onMatch={onMatchB}/>
                 </Router>
@@ -51,7 +51,7 @@ describe('Router', () => {
             const div = document.createElement('div');
             const onMatchAny = jest.fn();
             render((
-                <Router path="/not/match/path">
+                <Router currentPath="/not/match/path">
                     <Route pattern="/a" onMatch={() => {
                     }}/>
                     <Route pattern="/b" onMatch={() => {
