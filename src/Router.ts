@@ -2,13 +2,13 @@
 import * as React from "react";
 import { ReactElement } from "react";
 import { History } from "history";
-import createHistory from "history/createBrowserHistory";
 import { cleanPath, normalizeRoute } from "./path-util";
 import { RouteProps } from "./Route";
 
 const enroute = require("enroute");
 
 export interface RouterProps {
+    history: History;
     currentPath: string;
     onHistoryChange?: (arg: any) => void;
     children: ReactElement<RouteProps> | ReactElement<RouteProps>[];
@@ -22,12 +22,10 @@ export class Router extends React.Component<RouterProps> {
         [index: string]: (...args: any[]) => void;
     };
     private router: any;
-    private history: History;
     private unlisten?: () => void;
 
     constructor(args: RouterProps) {
         super(args);
-        this.history = createHistory();
         /**
          * Routing mapping object for enroute
          * @type {Object.<string, function>}
@@ -45,7 +43,7 @@ export class Router extends React.Component<RouterProps> {
         // At first time, run routing
         this.router(this.props.currentPath);
         // when the history is change, run routing
-        this.unlisten = this.history.listen(location => {
+        this.unlisten = this.props.history.listen(location => {
             if (process.env.NODE_ENV === "development") {
                 if (typeof this.router !== "function") {
                     throw new Error("this.router should be initialized");
@@ -86,11 +84,11 @@ export class Router extends React.Component<RouterProps> {
             return;
         }
         // same path is ignored
-        const location = this.history.location;
+        const location = this.props.history.location;
         if (location.pathname === path) {
             return;
         }
-        this.history.push(path);
+        this.props.history.push(path);
     }
 
     /**

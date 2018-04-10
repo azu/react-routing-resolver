@@ -3,14 +3,16 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { Router, Route } from "../";
+import createHistory from "history/createMemoryHistory";
 
+const history = createHistory();
 describe("Router", () => {
     describe("when `path` match `<Route pattern>`", () => {
         it("should call `onMatch` handler", () => {
             const div = document.createElement("div");
             const onMath = jest.fn();
             render(
-                <Router currentPath="/">
+                <Router currentPath="/" history={history}>
                     <Route pattern="/" onMatch={onMath} />
                 </Router>,
                 div,
@@ -23,7 +25,7 @@ describe("Router", () => {
             const div = document.createElement("div");
             const onMath = jest.fn();
             render(
-                <Router currentPath="/42/add">
+                <Router currentPath="/42/add" history={history}>
                     <Route pattern="/:id/:action" onMatch={onMath} />
                 </Router>,
                 div,
@@ -40,7 +42,7 @@ describe("Router", () => {
             const onMatchA = jest.fn();
             const onMatchB = jest.fn();
             render(
-                <Router currentPath="/path/both/A">
+                <Router currentPath="/path/both/A" history={history}>
                     <Route pattern="/path/both/A" onMatch={onMatchA} />
                     <Route pattern="/path/both/B" onMatch={onMatchB} />
                 </Router>,
@@ -57,7 +59,7 @@ describe("Router", () => {
             const div = document.createElement("div");
             const onMatchAny = jest.fn();
             render(
-                <Router currentPath="/not/match/path">
+                <Router currentPath="/not/match/path" history={history}>
                     <Route pattern="/a" onMatch={() => {}} />
                     <Route pattern="/b" onMatch={() => {}} />
                     <Route pattern="/b/c" onMatch={() => {}} />

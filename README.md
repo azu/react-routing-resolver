@@ -35,6 +35,7 @@ use `<Router>` and `<Route>` for declarative routing.
 
 ### `<Router>` props
 
+- `history`: a instance of [history package](https://github.com/ReactTraining/history)
 - `currentPath`: current path(path is same format with `location.pathname`
 - `onHistoryChange`: call the handler when the history is changed.
 
@@ -42,7 +43,9 @@ When the `path` is change, this library change the browser `history` by `history
 And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the `onMatch` handler.
 
 ```jsx
-<Router currentPath="/path/to/name" onHistoryChange={onHistoryChange}>
+import createHistory from "history/createBrowserHistory";
+const history = createHistory();
+<Router history={history} currentPath="/path/to/name" onHistoryChange={onHistoryChange}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
@@ -57,7 +60,7 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
   - When used [Named Parameters](https://github.com/pillarjs/path-to-regexp "Named Parameters"), pass the parameters object to `onMatch` handler.
 
 ```jsx
-<Router>
+<Router {...props}>
     {/* `<Route>` should be in `<Router />` */}
     <Route pattern="/view/:id" onMatch={onViewChange}/>
 </Router>
@@ -66,6 +69,8 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
 ## Example of `<Router>` and `<Route>`
 
 ```jsx
+import createHistory from "history/createBrowserHistory";
+const history = createHistory();
 import {Router, Route} from "react-routing-resolver";
 // pass `:id` as parameters object
 const onViewChange = ({ id }) => {
@@ -75,7 +80,7 @@ const onViewChange = ({ id }) => {
 const onMatchOther = () => {
 };
 
-<Router currentPath={router.path}>
+<Router currentPath={router.path} history={history}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
