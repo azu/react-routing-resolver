@@ -1,6 +1,6 @@
 {
   "name": "react-routing-resolver",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Routing component, but It does't mount component. It's just resolver.",
   "keywords": [
     "component",
