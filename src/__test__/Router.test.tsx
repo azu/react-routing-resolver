@@ -3,11 +3,15 @@
 import * as React from "react";
 import { render } from "react-dom";
 import { Router, Route } from "../";
+import { History } from "history";
 import createHistory from "history/createMemoryHistory";
 
-const history = createHistory();
+let history: History;
 describe("Router", () => {
-    describe("when `path` match `<Route pattern>`", () => {
+    beforeEach(() => {
+        history = createHistory();
+    });
+    describe("when `currentPath` match `<Route pattern>`", () => {
         it("should call `onMatch` handler", () => {
             const div = document.createElement("div");
             const onMath = jest.fn();
@@ -18,6 +22,23 @@ describe("Router", () => {
                 div,
                 () => {
                     expect(onMath).toHaveBeenCalledTimes(1);
+                }
+            );
+        });
+        it("should call `onNext` handler when first handler push hisotry", () => {
+            const div = document.createElement("div");
+            const onFirst = () => {
+                history.push("/next");
+            };
+            const onNext = jest.fn();
+            render(
+                <Router currentPath={"/first"} history={history}>
+                    <Route pattern="/first" onMatch={onFirst} />
+                    <Route pattern="/next" onMatch={onNext} />
+                </Router>,
+                div,
+                () => {
+                    expect(onNext).toHaveBeenCalledTimes(1);
                 }
             );
         });
@@ -36,7 +57,7 @@ describe("Router", () => {
             );
         });
     });
-    describe("when `path` match multiple `<Route pattern>`", () => {
+    describe("when `currentPath` match multiple `<Route pattern>`", () => {
         it("should call either `onMatch` handler", () => {
             const div = document.createElement("div");
             const onMatchA = jest.fn();
@@ -54,7 +75,7 @@ describe("Router", () => {
             );
         });
     });
-    describe("when `path` is not match any `<Route pattern>`", () => {
+    describe("when `currentPath` is not match any `<Route pattern>`", () => {
         it("should call * `onMatch` handler", () => {
             const div = document.createElement("div");
             const onMatchAny = jest.fn();

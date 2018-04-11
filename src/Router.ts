@@ -1,7 +1,7 @@
 "use strict";
 import * as React from "react";
 import { ReactElement } from "react";
-import { History } from "history";
+import { History, Location } from "history";
 import { cleanPath, normalizeRoute } from "./path-util";
 import { RouteProps } from "./Route";
 
@@ -10,7 +10,7 @@ const enroute = require("enroute");
 export interface RouterProps {
     history: History;
     currentPath: string;
-    onHistoryChange?: (arg: any) => void;
+    onHistoryChange?: (location: Location) => void;
     children: ReactElement<RouteProps> | ReactElement<RouteProps>[];
 }
 
@@ -37,23 +37,18 @@ export class Router extends React.Component<RouterProps> {
         // run routing
         // https://github.com/lapwinglabs/enroute
         this.router = enroute(this.routes);
-    }
-
-    componentDidMount() {
-        // At first time, run routing
-        this.router(this.props.currentPath);
         // when the history is change, run routing
         this.unlisten = this.props.history.listen(location => {
-            if (process.env.NODE_ENV === "development") {
-                if (typeof this.router !== "function") {
-                    throw new Error("this.router should be initialized");
-                }
-            }
             if (typeof this.props.onHistoryChange === "function") {
                 this.props.onHistoryChange(location);
             }
             this.router(location.pathname);
         });
+    }
+
+    componentDidMount() {
+        // At first time, run routing
+        this.router(this.props.currentPath);
     }
 
     componentDidUpdate() {
