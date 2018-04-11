@@ -1,9 +1,9 @@
 "use strict";
 import * as React from "react";
-import { ReactElement } from "react";
+import { ReactElement, ReactNode } from "react";
 import { History, Location } from "history";
 import { cleanPath, normalizeRoute } from "./path-util";
-import { RouteProps } from "./Route";
+import { isRoute, RouteProps } from "./Route";
 
 const enroute = require("enroute");
 
@@ -11,18 +11,30 @@ export interface RouterProps {
     history: History;
     currentPath: string;
     onHistoryChange?: (location: Location) => void;
-    children: ReactElement<RouteProps> | ReactElement<RouteProps>[];
+    children: React.ReactNode | React.ReactNode[];
+}
+
+export interface RouterState {
+    currentNode: ReactNode | null;
 }
 
 /**
  * Router is parent component
  */
-export class Router extends React.Component<RouterProps> {
+export class Router extends React.Component<RouterProps, RouterState> {
     private routes: {
         [index: string]: (...args: any[]) => void;
     };
-    private router: any;
+    private renderRoutes: {
+        [index: string]: (...args: any[]) => void;
+    };
+    private router: (pathname: string) => void;
+    private renderRouter: (pathname: string) => void;
     private unlisten?: () => void;
+
+    state = {
+        currentNode: null
+    };
 
     constructor(args: RouterProps) {
         super(args);
@@ -31,28 +43,34 @@ export class Router extends React.Component<RouterProps> {
          * @type {Object.<string, function>}
          */
         this.routes = {};
+        this.renderRoutes = {};
         // `<Route pattern="" onMatch=fn>`
         // create `this.routes` object
         this.addRoutes(this.props.children);
         // run routing
         // https://github.com/lapwinglabs/enroute
         this.router = enroute(this.routes);
+        this.renderRouter = enroute(this.renderRoutes);
         // when the history is change, run routing
         this.unlisten = this.props.history.listen(location => {
             if (typeof this.props.onHistoryChange === "function") {
                 this.props.onHistoryChange(location);
             }
             this.router(location.pathname);
+            this.renderRouter(location.pathname);
         });
     }
 
     componentDidMount() {
         // At first time, run routing
         this.router(this.props.currentPath);
+        this.renderRouter(this.props.currentPath);
     }
 
-    componentDidUpdate() {
-        this.updateRoutingPath(this.props.currentPath);
+    componentDidUpdate(prevProps: RouterProps) {
+        if (this.props.currentPath !== prevProps.currentPath) {
+            this.updateRoutingPath(this.props.currentPath);
+        }
     }
 
     componentWillUnmount() {
@@ -63,7 +81,7 @@ export class Router extends React.Component<RouterProps> {
 
     // nope
     render() {
-        return null;
+        return this.state.currentNode;
     }
 
     /**
@@ -92,11 +110,15 @@ export class Router extends React.Component<RouterProps> {
      * @param {Object} [parent]
      * @private
      */
-    private addRoutes(routes?: ReactElement<RouteProps> | ReactElement<RouteProps>[], parent?: any) {
+    private addRoutes(routes: React.ReactNode | React.ReactNode[], parent?: any) {
         if (!routes) {
             return;
         }
-        React.Children.forEach(routes, route => this.addRoute(route as ReactElement<RouteProps>, parent));
+        React.Children.forEach(routes, route => {
+            if (isRoute(route)) {
+                this.addRoute(route, parent);
+            }
+        });
     }
 
     /**
@@ -106,7 +128,7 @@ export class Router extends React.Component<RouterProps> {
      * @private
      */
     private addRoute(routeElement: ReactElement<RouteProps>, parent?: ReactElement<RouteProps>) {
-        const { pattern, onMatch, children } = routeElement.props;
+        const { pattern, onMatch, children, render } = routeElement.props;
         const route = normalizeRoute(pattern, parent);
         if (children) {
             this.addRoutes(children, { route });
@@ -116,6 +138,24 @@ export class Router extends React.Component<RouterProps> {
             onMatch(args);
         };
         (routingHandler as any).displayName = pattern;
-        this.routes[cleanPath(route)] = routingHandler;
+        const cleanedPath = cleanPath(route);
+        this.routes[cleanedPath] = routingHandler;
+        // render routing
+        this.renderRoutes[cleanedPath] = (args: any, _sharedProps: any) => {
+            if (render) {
+                const currentNode = render(args);
+                if (this.state.currentNode !== currentNode) {
+                    this.setState({
+                        currentNode: currentNode
+                    });
+                }
+            } else {
+                if (this.state.currentNode !== null) {
+                    this.setState({
+                        currentNode: null
+                    });
+                }
+            }
+        };
     }
 }

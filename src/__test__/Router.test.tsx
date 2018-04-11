@@ -56,6 +56,24 @@ describe("Router", () => {
                 }
             );
         });
+
+        it("`render` can render the node", (done: () => void) => {
+            const div = document.createElement("div");
+            const onMath = jest.fn();
+            render(
+                <Router currentPath="/view" history={history}>
+                    <Route pattern="/view" onMatch={onMath} render={() => <span>1</span>} />
+                </Router>,
+                div,
+                () => {
+                    // wait setState tick
+                    setTimeout(() => {
+                        expect(div.innerHTML).toEqual(`<span>1</span>`);
+                        done();
+                    }, 16);
+                }
+            );
+        });
     });
     describe("when `currentPath` match multiple `<Route pattern>`", () => {
         it("should call either `onMatch` handler", () => {

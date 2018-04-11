@@ -58,11 +58,20 @@ const history = createHistory();
   - `*` is special symbol. This pattern is matched when other pattern is not matched.
 - `onMatch`: register `onMatch` handler that is called the `pattern` is match.
   - When used [Named Parameters](https://github.com/pillarjs/path-to-regexp "Named Parameters"), pass the parameters object to `onMatch` handler.
+- `render`: render function can return React Node for redering when match the `pattern`.
+    - [Render Props - React](https://reactjs.org/docs/render-props.html)
 
 ```jsx
 <Router {...props}>
     {/* `<Route>` should be in `<Router />` */}
     <Route pattern="/view/:id" onMatch={onViewChange}/>
+</Router>
+```
+
+```jsx
+<Router {...props}>
+    {/* `<Route>` should be in `<Router />` */}
+    <Route pattern="/user/:name" onMatch={onViewChange} render={({ name }) => <h1>{name}</h1}/>
 </Router>
 ```
 
