@@ -7,12 +7,12 @@ export const isRoute = (node: any): node is ReactElement<RouteProps> => {
 };
 
 export interface RouteProps {
-    // sub path
-    path?: string;
     pattern: string;
-    onMatch: (...args: any[]) => void;
+    onMatch?: (...args: any[]) => any;
     render?: (...args: any[]) => ReactNode | null;
     children?: ReactElement<RouteProps> | ReactElement<RouteProps>[];
+    // sub path
+    path?: string;
 }
 
 /**

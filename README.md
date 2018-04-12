@@ -36,8 +36,7 @@ use `<Router>` and `<Route>` for declarative routing.
 ### `<Router>` props
 
 - `history`: a instance of [history package](https://github.com/ReactTraining/history)
-- `currentPath`: current path(path is same format with `location.pathname`
-- `onHistoryChange`: call the handler when the history is changed.
+    - the location path is `history.location.pathname` at all times
 
 When the `path` is change, this library change the browser `history` by `history.pushState`.
 And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the `onMatch` handler.
@@ -45,7 +44,7 @@ And if the `path` match `<Route pattern={pattern} onMatch={onMatch}>`, call the 
 ```jsx
 import createHistory from "history/createBrowserHistory";
 const history = createHistory();
-<Router history={history} currentPath="/path/to/name" onHistoryChange={onHistoryChange}>
+<Router history={history}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;
@@ -89,7 +88,7 @@ const onViewChange = ({ id }) => {
 const onMatchOther = () => {
 };
 
-<Router currentPath={router.path} history={history}>
+<Router history={history}>
     <Route pattern="/view/:id" onMatch={onViewChange}/>
     <Route pattern="*" onMatch={onMatchOther}/>
 </Router>;

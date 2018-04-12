@@ -6,17 +6,19 @@ import { Router, Route } from "../";
 import { History } from "history";
 import createHistory from "history/createMemoryHistory";
 
-let history: History;
-describe("Router", () => {
-    beforeEach(() => {
-        history = createHistory();
+const createHistoryWithInitial = (initialPath: string): History => {
+    return createHistory({
+        initialEntries: [initialPath]
     });
+};
+describe("Router", () => {
     describe("when `currentPath` match `<Route pattern>`", () => {
         it("should call `onMatch` handler", () => {
+            const history = createHistoryWithInitial("/");
             const div = document.createElement("div");
             const onMath = jest.fn();
             render(
-                <Router currentPath="/" history={history}>
+                <Router history={history}>
                     <Route pattern="/" onMatch={onMath} />
                 </Router>,
                 div,
@@ -27,12 +29,13 @@ describe("Router", () => {
         });
         it("should call `onNext` handler when first handler push hisotry", () => {
             const div = document.createElement("div");
+            const history = createHistoryWithInitial("/first");
             const onFirst = () => {
                 history.push("/next");
             };
             const onNext = jest.fn();
             render(
-                <Router currentPath={"/first"} history={history}>
+                <Router history={history}>
                     <Route pattern="/first" onMatch={onFirst} />
                     <Route pattern="/next" onMatch={onNext} />
                 </Router>,
@@ -43,10 +46,11 @@ describe("Router", () => {
             );
         });
         it("`onMatch` handler can receive :param", () => {
+            const history = createHistoryWithInitial("/42/add");
             const div = document.createElement("div");
             const onMath = jest.fn();
             render(
-                <Router currentPath="/42/add" history={history}>
+                <Router history={history}>
                     <Route pattern="/:id/:action" onMatch={onMath} />
                 </Router>,
                 div,
@@ -57,31 +61,53 @@ describe("Router", () => {
             );
         });
 
-        it("`render` can render the node", (done: () => void) => {
+        it("`render` should render the node", () => {
+            const history = createHistoryWithInitial("/view");
             const div = document.createElement("div");
             const onMath = jest.fn();
             render(
-                <Router currentPath="/view" history={history}>
+                <Router history={history}>
                     <Route pattern="/view" onMatch={onMath} render={() => <span>1</span>} />
                 </Router>,
                 div,
                 () => {
-                    // wait setState tick
-                    setTimeout(() => {
-                        expect(div.innerHTML).toEqual(`<span>1</span>`);
-                        done();
-                    }, 16);
+                    expect(div.innerHTML).toEqual(`<span>1</span>`);
                 }
             );
+        });
+
+        it("`render` should render the node when history is changed", () => {
+            const history = createHistoryWithInitial("/first");
+            const div = document.createElement("div");
+            return new Promise(resolve => {
+                render(
+                    <Router history={history}>
+                        <Route pattern="/first" render={() => <span>first</span>} />
+                        <Route pattern="/final" render={() => <span>final</span>} />
+                    </Router>,
+                    div,
+                    () => {
+                        expect(div.innerHTML).toEqual(`<span>first</span>`);
+                        resolve();
+                    }
+                );
+            })
+                .then(() => {
+                    history.push("/final");
+                })
+                .then(() => {
+                    expect(div.innerHTML).toEqual(`<span>final</span>`);
+                });
         });
     });
     describe("when `currentPath` match multiple `<Route pattern>`", () => {
         it("should call either `onMatch` handler", () => {
+            const history = createHistoryWithInitial("/path/both/A");
             const div = document.createElement("div");
             const onMatchA = jest.fn();
             const onMatchB = jest.fn();
             render(
-                <Router currentPath="/path/both/A" history={history}>
+                <Router history={history}>
                     <Route pattern="/path/both/A" onMatch={onMatchA} />
                     <Route pattern="/path/both/B" onMatch={onMatchB} />
                 </Router>,
@@ -95,10 +121,12 @@ describe("Router", () => {
     });
     describe("when `currentPath` is not match any `<Route pattern>`", () => {
         it("should call * `onMatch` handler", () => {
+            const history = createHistoryWithInitial("/not/match/path");
+
             const div = document.createElement("div");
             const onMatchAny = jest.fn();
             render(
-                <Router currentPath="/not/match/path" history={history}>
+                <Router history={history}>
                     <Route pattern="/a" onMatch={() => {}} />
                     <Route pattern="/b" onMatch={() => {}} />
                     <Route pattern="/b/c" onMatch={() => {}} />

@@ -9,33 +9,22 @@ const enroute = require("enroute");
 
 export interface RouterProps {
     history: History;
-    currentPath: string;
-    onHistoryChange?: (location: Location) => void;
     children: React.ReactNode | React.ReactNode[];
-}
-
-export interface RouterState {
-    currentNode: ReactNode | null;
 }
 
 /**
  * Router is parent component
  */
-export class Router extends React.Component<RouterProps, RouterState> {
+export class Router extends React.PureComponent<RouterProps> {
     private routes: {
         [index: string]: (...args: any[]) => void;
     };
     private renderRoutes: {
-        [index: string]: (...args: any[]) => void;
+        [index: string]: (...args: any[]) => ReactNode | null;
     };
     private router: (pathname: string) => void;
-    private renderRouter: (pathname: string) => void;
+    private renderRouter: (pathname: string) => ReactNode | null;
     private unlisten?: () => void;
-
-    state = {
-        currentNode: null
-    };
-
     constructor(args: RouterProps) {
         super(args);
         /**
@@ -52,25 +41,17 @@ export class Router extends React.Component<RouterProps, RouterState> {
         this.router = enroute(this.routes);
         this.renderRouter = enroute(this.renderRoutes);
         // when the history is change, run routing
-        this.unlisten = this.props.history.listen(location => {
-            if (typeof this.props.onHistoryChange === "function") {
-                this.props.onHistoryChange(location);
-            }
+        this.unlisten = this.props.history.listen((location: Location) => {
             this.router(location.pathname);
-            this.renderRouter(location.pathname);
+            // update render for current location
+            this.forceUpdate();
         });
     }
 
     componentDidMount() {
         // At first time, run routing
-        this.router(this.props.currentPath);
-        this.renderRouter(this.props.currentPath);
-    }
-
-    componentDidUpdate(prevProps: RouterProps) {
-        if (this.props.currentPath !== prevProps.currentPath) {
-            this.updateRoutingPath(this.props.currentPath);
-        }
+        const { location } = this.props.history;
+        this.router(location.pathname);
     }
 
     componentWillUnmount() {
@@ -79,29 +60,9 @@ export class Router extends React.Component<RouterProps, RouterState> {
         }
     }
 
-    // nope
     render() {
-        return this.state.currentNode;
-    }
-
-    /**
-     * Push history state when actually change`path`
-     * @param {string|undefined} path
-     * @private
-     */
-    private updateRoutingPath(path?: string) {
-        if (!path) {
-            return;
-        }
-        if (path.length === 0) {
-            return;
-        }
-        // same path is ignored
-        const location = this.props.history.location;
-        if (location.pathname === path) {
-            return;
-        }
-        this.props.history.push(path);
+        const { location } = this.props.history;
+        return this.renderRouter(location.pathname);
     }
 
     /**
@@ -129,33 +90,30 @@ export class Router extends React.Component<RouterProps, RouterState> {
      */
     private addRoute(routeElement: ReactElement<RouteProps>, parent?: ReactElement<RouteProps>) {
         const { pattern, onMatch, children, render } = routeElement.props;
+        if (render === undefined && onMatch === undefined) {
+            throw new Error(`The <Route pattern="${pattern}" /> must have either one of onMatch or render props.`);
+        }
         const route = normalizeRoute(pattern, parent);
         if (children) {
             this.addRoutes(children, { route });
         }
         // https://github.com/lapwinglabs/enroute
         const routingHandler = (args: any, _sharedProps: any) => {
-            onMatch(args);
-        };
-        (routingHandler as any).displayName = pattern;
-        const cleanedPath = cleanPath(route);
-        this.routes[cleanedPath] = routingHandler;
-        // render routing
-        this.renderRoutes[cleanedPath] = (args: any, _sharedProps: any) => {
-            if (render) {
-                const currentNode = render(args);
-                if (this.state.currentNode !== currentNode) {
-                    this.setState({
-                        currentNode: currentNode
-                    });
-                }
-            } else {
-                if (this.state.currentNode !== null) {
-                    this.setState({
-                        currentNode: null
-                    });
-                }
+            if (onMatch) {
+                onMatch(args);
             }
         };
+        (routingHandler as any).displayName = pattern;
+        // render routing
+        const renderHandler = (args: any, _sharedProps: any) => {
+            if (render) {
+                return render(args);
+            } else {
+                return null;
+            }
+        };
+        const cleanedPath = cleanPath(route);
+        this.routes[cleanedPath] = routingHandler;
+        this.renderRoutes[cleanedPath] = renderHandler;
     }
 }
